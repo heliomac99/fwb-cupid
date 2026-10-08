@@ -1,0 +1,87 @@
+{
+  "_ajuda": [
+    "Suite CORE do preset CLOVES (DW1000 canal 4): compara so Cupid, Weaver e Crystal.",
+    "Cada cenario muda UMA dimensao do caso-base; 'tema' agrupa as dimensoes.",
+    "Rode com: python run_cenarios.py cenarios_cloves_core.json --suite core --run-id <id>",
+    "Piloto sem editar este arquivo: --epochs 50 --topologies 2.",
+    "Hipoteses e fontes de cada parametro: comentarios de cupid_sim_v2.py e radio_profiles.py; as hipoteses em vigor vao para o run_manifest.json.",
+    "A unidade estatistica e a TOPOLOGIA (N_TOPOLOGIES); EPOCHS e por topologia e protocolo."
+  ],
+  "preset": "cloves",
+  "suite": "core",
+  "protocolos": ["cupid", "weaver", "crystal"],
+  "experimentos": ["cdf", "carga", "pdr", "micro"],
+  "cenarios": [
+    {"nome": "base", "tema": "base", "suite": "core",
+     "descricao": "Caso-base CLOVES: 36 nos em 83 x 33 m, sink na borda, O = 35, 10 topologias.",
+     "parametros": {"EPOCHS": 200, "N_TOPOLOGIES": 10, "SEED": 42}},
+
+    {"nome": "sementes_01", "tema": "sementes", "suite": "core",
+     "descricao": "Outra familia de topologias (SEED base 1).",
+     "parametros": {"EPOCHS": 200, "SEED": 1}},
+    {"nome": "sementes_07", "tema": "sementes", "suite": "core",
+     "descricao": "Outra familia de topologias (SEED base 7).",
+     "parametros": {"EPOCHS": 200, "SEED": 7}},
+    {"nome": "sementes_2024", "tema": "sementes", "suite": "core",
+     "descricao": "Outra familia de topologias (SEED base 2024).",
+     "parametros": {"EPOCHS": 200, "SEED": 2024}},
+
+    {"nome": "densidade_24", "tema": "densidade", "suite": "core",
+     "descricao": "24 nos na mesma area: menos disputa por slot.",
+     "parametros": {"EPOCHS": 200, "N_NODES": 24}},
+    {"nome": "densidade_50", "tema": "densidade", "suite": "core",
+     "descricao": "50 nos na mesma area: mais disputa por slot.",
+     "parametros": {"EPOCHS": 200, "N_NODES": 50}},
+
+    {"nome": "profundidade_rasa", "tema": "profundidade", "suite": "core",
+     "descricao": "Area de 50 x 33 m com a mesma densidade (22 nos): menos hops.",
+     "parametros": {"EPOCHS": 200, "N_NODES": 22, "AREA_X": 50.0}},
+    {"nome": "profundidade_funda", "tema": "profundidade", "suite": "core",
+     "descricao": "Area de 125 x 33 m com a mesma densidade (54 nos): mais hops.",
+     "parametros": {"EPOCHS": 200, "N_NODES": 54, "AREA_X": 125.0, "MAX_SLOTS": 2000}},
+
+    {"nome": "canal_fading_2dB", "tema": "canal", "suite": "core",
+     "descricao": "Fast fading de 2 dB (hipotese: canal quase estatico).",
+     "parametros": {"EPOCHS": 200, "FAST_FADE_DB": 2.0}},
+    {"nome": "canal_fading_8dB", "tema": "canal", "suite": "core",
+     "descricao": "Fast fading de 8 dB (hipotese: canal muito variavel).",
+     "parametros": {"EPOCHS": 200, "FAST_FADE_DB": 8.0}},
+
+    {"nome": "carga", "tema": "carga", "suite": "core",
+     "descricao": "Latencia x originadores (O = 5..35) e PDR x frequencia com mais epocas.",
+     "experimentos_cenario": ["carga", "pdr"],
+     "parametros": {"EPOCHS": 400}},
+
+    {"nome": "tamanho_26B", "tema": "tamanho", "suite": "core",
+     "descricao": "Quadro de dados curto (26 B, Cupid Fig. 11) num slot de 460 us (hipotese: o artigo nao informa o slot dos pacotes curtos).",
+     "parametros": {"EPOCHS": 200, "DATA_FRAME_BYTES": 26, "SLOT_US": 460.0}},
+
+    {"nome": "captura_legado_peso", "tema": "captura", "suite": "core",
+     "descricao": "Modelo de captura LEGADO (peso assincrono 0,06) no radio CLOVES: sensibilidade ao modelo.",
+     "parametros": {"EPOCHS": 200, "CAPTURE_MODEL": "legacy_async_weight"}},
+    {"nome": "captura_extrapolacao_inferior", "tema": "captura", "suite": "core",
+     "descricao": "Modelo empirico com o limite INFERIOR da faixa fora da regiao medida (> 9 fontes).",
+     "parametros": {"EPOCHS": 200, "CAPTURE_EXTRAPOLATION": "lower"}},
+    {"nome": "captura_extrapolacao_superior", "tema": "captura", "suite": "core",
+     "descricao": "Modelo empirico com o limite SUPERIOR da faixa fora da regiao medida.",
+     "parametros": {"EPOCHS": 200, "CAPTURE_EXTRAPOLATION": "upper"}},
+    {"nome": "captura_intra_aquisicao_pior", "tema": "captura", "suite": "core",
+     "descricao": "Regime nao medido (concorrentes todos dentro da aquisicao, atraso <= 1 us) no PIOR caso medido: curva do SECON com pacotes sincronizados, mais a extrapolacao inferior acima de 9 fontes.",
+     "parametros": {"EPOCHS": 200, "CAPTURE_INTRA_ACQUISITION": "sync_table", "CAPTURE_EXTRAPOLATION": "lower"}},
+    {"nome": "captura_intra_aquisicao_sem_penalidade", "tema": "captura", "suite": "core",
+     "descricao": "Limite teorico, sem medicao: concorrentes dentro da aquisicao nao atrapalham. So para ver se a conclusao depende do regime nao medido.",
+     "parametros": {"EPOCHS": 200, "CAPTURE_INTRA_ACQUISITION": "no_penalty"}},
+
+    {"nome": "shadowing_2dB", "tema": "shadowing", "suite": "core",
+     "descricao": "Shadowing estatico de 2 dB (mais proximo de LOS; hipotese).",
+     "parametros": {"EPOCHS": 200, "SHADOW_DB": 2.0}},
+    {"nome": "shadowing_8dB", "tema": "shadowing", "suite": "core",
+     "descricao": "Shadowing estatico de 8 dB (NLOS severo; hipotese).",
+     "parametros": {"EPOCHS": 200, "SHADOW_DB": 8.0}},
+
+    {"nome": "estresse", "tema": "estresse", "suite": "core",
+     "descricao": "Pior caso combinado: 60 nos em 120 x 45 m, fading de 8 dB, extrapolacao inferior da captura.",
+     "parametros": {"EPOCHS": 200, "N_NODES": 60, "AREA_X": 120.0, "AREA_Y": 45.0,
+                    "FAST_FADE_DB": 8.0, "CAPTURE_EXTRAPOLATION": "lower", "MAX_SLOTS": 2000}}
+  ]
+}

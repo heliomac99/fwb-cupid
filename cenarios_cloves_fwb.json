@@ -1,0 +1,37 @@
+{
+  "_ajuda": [
+    "Suite FWB do preset CLOVES: Cupid de um canal x Cupid FWB (alocacao de canais em funil).",
+    "O FWB reusa o mesmo bootstrap, agrupamento, workload, PHY, ACKs e estatistica do Cupid: so a atribuicao/recepcao de canais muda.",
+    "Com 1 radio por no o FWB e IDENTICO ao Cupid (o DW1000 tem um front-end e troca de canal leva mais que um slot).",
+    "hardware_hipotetico: true = mais de 1 radio por no (placa customizada) -- nunca o hardware do testbed.",
+    "Cenarios com 'ideal' no nome (16 canais/16 radios) sao so referencia teorica: nao sao hardware DW1000.",
+    "Rode com: python run_cenarios.py cenarios_cloves_fwb.json --suite fwb --run-id <id>"
+  ],
+  "preset": "cloves",
+  "suite": "fwb",
+  "protocolos": ["cupid", "cupid_fwb"],
+  "experimentos": ["cdf", "funil", "crosstalk", "radios", "planos"],
+  "cenarios": [
+    {"nome": "fwb_cupid_1canal_referencia", "suite": "fwb",
+     "descricao": "Referencia: um canal so (K = 1), 1 radio por no.",
+     "parametros": {"EPOCHS": 200, "CHANNEL_PLAN": "dw1000", "N_CHANNELS": 1, "N_RADIOS_PER_NODE": 1}},
+    {"nome": "fwb_1radio_dw1000", "suite": "fwb",
+     "descricao": "DW1000 com K = 4 e 1 radio por no: a atribuicao colapsa para um canal e o FWB deve ser identico ao Cupid.",
+     "parametros": {"EPOCHS": 200, "CHANNEL_PLAN": "dw1000", "N_CHANNELS": 4, "N_RADIOS_PER_NODE": 1}},
+    {"nome": "fwb_1radio_dw1000_canal4", "suite": "fwb",
+     "descricao": "Plano realista com o canal 4 em uso (K = 2: so o 5 ou o 7 nao se sobrepoe), 1 radio por no.",
+     "parametros": {"EPOCHS": 200, "CHANNEL_PLAN": "dw1000_ch4", "N_CHANNELS": 2, "N_RADIOS_PER_NODE": 1}},
+    {"nome": "fwb_2radios_dw1000_canal4", "suite": "fwb", "hardware_hipotetico": true,
+     "descricao": "HIPOTETICO: 2 radios por no (placa customizada), K = 2 no plano do canal 4.",
+     "parametros": {"EPOCHS": 200, "CHANNEL_PLAN": "dw1000_ch4", "N_CHANNELS": 2, "N_RADIOS_PER_NODE": 2}},
+    {"nome": "fwb_2radios_dw1000", "suite": "fwb", "hardware_hipotetico": true,
+     "descricao": "HIPOTETICO: 2 radios por no, K = 4 no DW1000 (canais 1, 2, 3 e 5 nao sobrepostos).",
+     "parametros": {"EPOCHS": 200, "CHANNEL_PLAN": "dw1000", "N_CHANNELS": 4, "N_RADIOS_PER_NODE": 2}},
+    {"nome": "fwb_2radios_aclr_20dB", "suite": "fwb", "hardware_hipotetico": true,
+     "descricao": "HIPOTETICO: como fwb_2radios_dw1000, com ACLR de 20 dB (vazamento maior entre canais).",
+     "parametros": {"EPOCHS": 200, "CHANNEL_PLAN": "dw1000", "N_CHANNELS": 4, "N_RADIOS_PER_NODE": 2, "ACLR_DB": 20.0}},
+    {"nome": "fwb_funil_16canais_ideal", "suite": "fwb", "hardware_hipotetico": true,
+     "descricao": "IDEAL (premissa do artigo v1): 16 canais recebidos ao mesmo tempo, 16 radios por no. So referencia teorica; nao e hardware DW1000.",
+     "parametros": {"EPOCHS": 200, "CHANNEL_PLAN": "ieee_nominal", "N_CHANNELS": 16, "N_RADIOS_PER_NODE": 16}}
+  ]
+}

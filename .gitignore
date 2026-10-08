@@ -1,0 +1,11 @@
+outputs/
+logs/
+docs/
+*.png
+*.csv
+resumo_resultados.txt
+
+__pycache__/
+*.py[cod]
+.venv/
+.claude/

@@ -1,0 +1,44 @@
+cff-version: 1.2.0
+message: "Se usar este simulador, cite o artigo abaixo."
+title: "Simulador Cupid: convergecast por transmissão concorrente em UWB"
+type: software
+license: MIT
+repository-code: "https://github.com/heliomac99/fwb-cupid"
+keywords:
+  - UWB
+  - convergecast
+  - concurrent transmissions
+  - Cupid
+  - Weaver
+  - Crystal
+  - FWB
+  - discrete-event simulation
+authors:
+  - given-names: Lucas Emanuel Elias
+    family-names: Alves
+    affiliation: Universidade Federal de Minas Gerais (UFMG)
+  - given-names: Hélio Martins de Araújo
+    family-names: Costa Neto
+    affiliation: Universidade Federal de Minas Gerais (UFMG)
+  - given-names: Luiz F. M.
+    family-names: Vieira
+    affiliation: Universidade Federal de Minas Gerais (UFMG)
+  - given-names: Marcos A. M.
+    family-names: Vieira
+    affiliation: Universidade Federal de Minas Gerais (UFMG)
+preferred-citation:
+  type: conference-paper
+  title: "FWB-Cupid: Alocação de Canais em Funil para Convergecast em UWB"
+  authors:
+    - given-names: Lucas Emanuel Elias
+      family-names: Alves
+    - given-names: Hélio Martins de Araújo
+      family-names: Costa Neto
+    - given-names: Luiz F. M.
+      family-names: Vieira
+    - given-names: Marcos A. M.
+      family-names: Vieira
+  collection-title: "Anais do Simpósio Brasileiro de Engenharia de Sistemas Computacionais (SBESC)"
+  conference:
+    name: "Simpósio Brasileiro de Engenharia de Sistemas Computacionais (SBESC)"
+  year: 2026

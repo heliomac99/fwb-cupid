@@ -1,0 +1,129 @@
+{
+  "_ajuda": [
+    "SUITE LEGADA: reproduz o motor auditado (5ef525b, F28) pelo preset explicito 'legacy_v2' (canal 5, hops por BFS, TX_PROB 0,85). As suites novas sao cenarios_cloves_core.json e cenarios_cloves_fwb.json.",
+    "Cada item de 'cenarios' e uma simulacao independente, salva em outputs/<run-id>/<nome>/.",
+    "Em 'parametros' coloque APENAS o que quiser mudar; o resto usa o padrao do cupid_sim_v2.py.",
+    "Os parametros validos sao os PARAM_NAMES definidos em cupid_sim_v2.py.",
+    "N_CHANNELS = total de canais UWB que o 'cupid_fwb' aloca em FUNIL (mais perto do sink).",
+    "Cenarios FWB declaram CHANNEL_PLAN e N_RADIOS_PER_NODE: com 1 radio/no o FWB e identico ao Cupid.",
+    "Pedir N_CHANNELS acima do CHANNEL_PLAN e ERRO; so passa com \"allow_clamp\": true no cenario.",
+    "ACK_MODEL: 'weaver' (padrao): G-ACK do Weaver, igual no Cupid; para comparacao A/B 'physical' (etapa 0), 'legacy' (oraculo antigo, numeros de 10/09), 'oracle' (limite superior) ou 'none' -- ver cupid_sim_v2.py.",
+    "hardware_hipotetico: true marca cenario com mais de 1 radio por no. O DW1000 tem um front-end so; 2 ou 16 radios por no sao hardware customizado ou ideal, nunca o do testbed.",
+    "'descricao' e so documentacao (ignorada pela execucao).",
+    "Rode com: python run_cenarios.py cenarios.json --suite legacy --run-id <id>",
+    "EPOCHS=1000: cada cenario leva horas. Piloto sem editar este arquivo: --epochs 50 --topologies 2."
+  ],
+
+  "preset": "legacy_v2",
+  "suite": "legacy",
+
+  "cenarios": [
+    {
+      "nome": "base_seed01",
+      "descricao": "Baseline. Robustez estatistica: mesma config, topologias diferentes (seed).",
+      "parametros": { "EPOCHS": 1000, "SEED": 1 }
+    },
+    {
+      "nome": "base_seed07",
+      "descricao": "Baseline com outra topologia.",
+      "parametros": { "EPOCHS": 1000, "SEED": 7 }
+    },
+    {
+      "nome": "base_seed42",
+      "descricao": "Baseline com a seed padrao do artigo/codigo.",
+      "parametros": { "EPOCHS": 1000, "SEED": 42 }
+    },
+    {
+      "nome": "base_seed123",
+      "descricao": "Baseline com outra topologia.",
+      "parametros": { "EPOCHS": 1000, "SEED": 123 }
+    },
+    {
+      "nome": "base_seed2024",
+      "descricao": "Baseline com outra topologia.",
+      "parametros": { "EPOCHS": 1000, "SEED": 2024 }
+    },
+
+    {
+      "nome": "densidade_esparsa",
+      "descricao": "Poucos nos por hop -> pouca disputa. Vantagem do Cupid tende a encolher.",
+      "parametros": { "EPOCHS": 1000, "N_NODES": 24 }
+    },
+    {
+      "nome": "densidade_densa",
+      "descricao": "Mais nos na mesma area -> mais disputa por slot. Agrupamento do Cupid ajuda mais.",
+      "parametros": { "EPOCHS": 1000, "N_NODES": 50 }
+    },
+    {
+      "nome": "densidade_muito_densa",
+      "descricao": "Rede grande e densa mantendo multihop (area escalada). Pior disputa por hop.",
+      "parametros": { "EPOCHS": 1000, "N_NODES": 70, "AREA_X": 120.0, "AREA_Y": 45.0 }
+    },
+
+    {
+      "nome": "alcance_curto_mais_hops",
+      "descricao": "Alcance menor -> mais saltos ate o sink. Estressa o escalonamento multihop.",
+      "parametros": { "EPOCHS": 1000, "ROUTING_MARGIN_DB": 6.13943297944485, "MAX_SLOTS": 800 }
+    },
+    {
+      "nome": "alcance_longo_menos_hops",
+      "descricao": "Alcance maior -> menos hops, vizinhancas densas. Cupid x Weaver mais parecidos.",
+      "parametros": { "EPOCHS": 1000, "ROUTING_MARGIN_DB": -0.351499783199053 }
+    },
+
+    {
+      "nome": "canal_bom",
+      "descricao": "Pouco desvanecimento -> captura facil, poucas colisoes.",
+      "parametros": { "EPOCHS": 1000, "FAST_FADE_DB": 2.0 }
+    },
+    {
+      "nome": "canal_ruim",
+      "descricao": "Muito desvanecimento -> mais colisoes. Menor disputa simultanea do Cupid pesa.",
+      "parametros": { "EPOCHS": 1000, "FAST_FADE_DB": 8.0, "MAX_SLOTS": 800 }
+    },
+    {
+      "nome": "canal_pessimo",
+      "descricao": "Canal NLOS severo. Teste de stress de confiabilidade.",
+      "parametros": { "EPOCHS": 1000, "FAST_FADE_DB": 12.0, "MAX_SLOTS": 1000 }
+    },
+
+    {
+      "nome": "captura_facil",
+      "descricao": "Limiar de captura baixo -> sinal mais forte vence facil, menos colisoes.",
+      "parametros": { "EPOCHS": 1000, "CAPTURE_SIR_DB": 1.0 }
+    },
+    {
+      "nome": "captura_dificil",
+      "descricao": "Limiar de captura alto -> dificil destacar um sinal, mais colisoes.",
+      "parametros": { "EPOCHS": 1000, "CAPTURE_SIR_DB": 6.0, "MAX_SLOTS": 800 }
+    },
+
+    {
+      "nome": "estresse_denso_canal_ruim",
+      "descricao": "Pior caso combinado: rede grande/densa + canal ruim + captura dificil.",
+      "parametros": {
+        "EPOCHS": 1000, "N_NODES": 60, "AREA_X": 120.0, "AREA_Y": 45.0,
+        "FAST_FADE_DB": 8.0, "CAPTURE_SIR_DB": 4.0, "MAX_SLOTS": 1000
+      }
+    },
+
+    {
+      "nome": "fwb_2radios_dw1000",
+      "hardware_hipotetico": true,
+      "descricao": "EXTENSAO (FWB), HIPOTETICO: hardware customizado de 2 radios por no no DW1000 (K=4). Com 1 radio o FWB e identico ao Cupid (os cenarios base ja mostram isso); este e o cenario FWB fisicamente plausivel.",
+      "parametros": { "EPOCHS": 1000, "CHANNEL_PLAN": "dw1000", "N_CHANNELS": 4, "N_RADIOS_PER_NODE": 2 }
+    },
+    {
+      "nome": "fwb_funil_16canais_ideal",
+      "hardware_hipotetico": true,
+      "descricao": "PREMISSA DO ARTIGO (v1), IRREAL: 16 canais recebidos ao mesmo tempo (16 radios por no). Serve so para comparar com a tabela FWB do artigo. O antigo 'fwb_funil_16canais' pedia 16 canais no plano dw1000 e rodava, sem aviso, o baseline de 4.",
+      "parametros": { "EPOCHS": 1000, "CHANNEL_PLAN": "ieee_nominal", "N_CHANNELS": 16, "N_RADIOS_PER_NODE": 16 }
+    },
+    {
+      "nome": "fwb_funil_denso_16canais_ideal",
+      "hardware_hipotetico": true,
+      "descricao": "Idem, rede densa (60 nos em 120x45 m), como o segundo cenario FWB do artigo. IRREAL.",
+      "parametros": { "EPOCHS": 1000, "N_NODES": 60, "AREA_X": 120.0, "AREA_Y": 45.0, "CHANNEL_PLAN": "ieee_nominal", "N_CHANNELS": 16, "N_RADIOS_PER_NODE": 16 }
+    }
+  ]
+}
